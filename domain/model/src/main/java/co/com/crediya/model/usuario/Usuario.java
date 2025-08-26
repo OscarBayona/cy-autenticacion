@@ -1,5 +1,7 @@
 package co.com.crediya.model.usuario;
 import co.com.crediya.model.contants.LimitesSalarioBase;
+import co.com.crediya.model.exceptions.NegocioException;
+import co.com.crediya.model.exceptions.ValidacionException;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,28 +35,28 @@ public class Usuario {
 
     private static void validarNombres(String nombres) {
         if (nombres == null || nombres.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del usuario es obligatorio.");
+            throw new ValidacionException("El nombre del usuario es obligatorio.");
         }
     }
 
     private static void validarApellidos(String apellidos) {
         if (apellidos == null || apellidos.trim().isEmpty()) {
-            throw new IllegalArgumentException("El apellido del usuario es obligatorio.");
+            throw new ValidacionException("El apellido del usuario es obligatorio.");
         }
     }
 
     private static void validarCorreoElectronico(String correoElectronico) {
         if (correoElectronico == null || correoElectronico.trim().isEmpty()) {
-            throw new IllegalArgumentException("El correo electrónico del usuario es obligatorio.");
+            throw new ValidacionException("El correo electrónico del usuario es obligatorio.");
         }
         if (!correoElectronico.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            throw new IllegalArgumentException("El formato del correo electrónico no es válido.");
+            throw new ValidacionException("El formato del correo electrónico no es válido.");
         }
     }
 
     private static void validarSalarioBase(Integer salarioBase) {
         if (salarioBase == null || salarioBase < LimitesSalarioBase.MINIMO || salarioBase > LimitesSalarioBase.MAXIMO) {
-            throw new IllegalArgumentException("El salario base es obligatorio y debe estar entre 0 y 15000000.");
+            throw new NegocioException("El salario base es obligatorio y debe estar entre 0 y 15000000.");
         }
     }
 }

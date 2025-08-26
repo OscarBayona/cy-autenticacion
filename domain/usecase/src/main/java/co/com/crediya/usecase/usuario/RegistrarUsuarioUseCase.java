@@ -1,5 +1,7 @@
 package co.com.crediya.usecase.usuario;
 
+import co.com.crediya.model.exceptions.NegocioException;
+import co.com.crediya.model.exceptions.TecnicaException;
 import co.com.crediya.model.usuario.Usuario;
 import co.com.crediya.model.usuario.gateways.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +26,13 @@ public class RegistrarUsuarioUseCase {
                 .doOnError(error -> logger.severe("RegistrarUsuarioUseCase: Error al verificar si el usuario con correo " + usuario.getCorreoElectronico()))
                 .flatMap(existe -> {
                     if (Boolean.TRUE.equals(existe)) {
-                        return Mono.error(new RuntimeException("El correo electrónico ya está registrado."));
+                        return Mono.error(new NegocioException("El correo electrónico ya está registrado."));
                     }
                     return usuarioRepository.guardarUsuario(usuario)
                             .doOnSubscribe(sub -> logger.info("RegistrarUsuarioUseCase: Registrando usuario con correo " + usuario.getCorreoElectronico()))
                             .doOnSuccess(usuarioGuardado -> logger.info("RegistrarUsuarioUseCase: Usuario registrado con ID " + usuarioGuardado.getIdUsuario()))
                             .doOnError(error -> {
-                                throw new RuntimeException(error.getMessage());
+                                throw new TecnicaException(error.getMessage());
                             });
                 });
     }
