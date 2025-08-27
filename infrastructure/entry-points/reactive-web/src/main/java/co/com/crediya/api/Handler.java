@@ -1,10 +1,8 @@
 package co.com.crediya.api;
 
-import co.com.crediya.api.dto.request.RegistrarUsuarioDTO;
-import co.com.crediya.api.mapper.UsuarioDTOMapper;
-import co.com.crediya.model.usuario.Usuario;
-import co.com.crediya.usecase.usuario.RegistrarUsuarioUseCase;
-import lombok.AllArgsConstructor;
+import co.com.crediya.api.dto.request.CreateUserDTO;
+import co.com.crediya.api.mapper.UserDTOMapper;
+import co.com.crediya.usecase.user.CreateUserUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -16,19 +14,19 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class Handler {
 
-    private final RequestValidador validador;
-    private final RegistrarUsuarioUseCase registrarUsuarioUseCase;
-    private final UsuarioDTOMapper usuarioDTOMapper;
+    private final RequestValidador validator;
+    private final CreateUserUseCase createUserUseCase;
+    private final UserDTOMapper userDTOMapper;
 
 
-    public Mono<ServerResponse> listenRegistrarUsuario(ServerRequest serverRequest) {
+    public Mono<ServerResponse> listenCreateUser(ServerRequest serverRequest) {
 
-        return serverRequest.bodyToMono(RegistrarUsuarioDTO.class)
-                .flatMap(validador::validar)
-                .map(usuarioDTOMapper::toModel)
-                .flatMap(registrarUsuarioUseCase::execute)
+        return serverRequest.bodyToMono(CreateUserDTO.class)
+                .flatMap(validator::validate)
+                .map(userDTOMapper::toModel)
+                .flatMap(createUserUseCase::execute)
                 .flatMap(saveUser->ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(usuarioDTOMapper.toResponse(saveUser)));
+                        .bodyValue(userDTOMapper.toResponse(saveUser)));
     }
 }

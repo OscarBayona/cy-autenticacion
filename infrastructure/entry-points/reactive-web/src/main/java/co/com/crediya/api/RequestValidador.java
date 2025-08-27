@@ -11,12 +11,12 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class RequestValidador {
 
-    private final Validator validador;
+    private final Validator validator;
 
-    public <T> Mono<T> validar(T dto) {
+    public <T> Mono<T> validate(T dto) {
         return Mono.fromCallable(() -> {
             var errors = new BeanPropertyBindingResult(dto, dto.getClass().getName());
-            validador.validate(dto, errors);
+            validator.validate(dto, errors);
             if (errors.hasErrors()) throw new ValidationException(errors.toString());
             return dto;
         });

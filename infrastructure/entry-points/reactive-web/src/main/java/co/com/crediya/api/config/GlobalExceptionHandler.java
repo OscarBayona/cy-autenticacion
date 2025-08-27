@@ -1,18 +1,15 @@
 package co.com.crediya.api.config;
 
-import co.com.crediya.model.exceptions.NegocioException;
-import co.com.crediya.model.exceptions.TecnicaException;
-import co.com.crediya.model.exceptions.ValidacionException;
+import co.com.crediya.model.exceptions.BusinessException;
+import co.com.crediya.model.exceptions.TechnicalException;
+import co.com.crediya.model.exceptions.user.InvalidUserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.HttpMessageWriter;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.result.view.ViewResolver;
@@ -40,13 +37,13 @@ public class GlobalExceptionHandler implements WebExceptionHandler {
         HttpStatus status;
         String customMessage;
 
-        if (ex instanceof NegocioException) {
+        if (ex instanceof BusinessException) {
             status = HttpStatus.CONFLICT; // 409
             customMessage = "Error de negocio: " + ex.getMessage();
-        } else if (ex instanceof ValidacionException) {
+        } else if (ex instanceof InvalidUserException) {
             status = HttpStatus.BAD_REQUEST; // 400
             customMessage = "Error de validación: " + ex.getMessage();
-        } else if (ex instanceof TecnicaException) {
+        } else if (ex instanceof TechnicalException) {
             status = HttpStatus.INTERNAL_SERVER_ERROR; // 500
             customMessage = "Error técnico en el sistema, contacte soporte.";
         } else {

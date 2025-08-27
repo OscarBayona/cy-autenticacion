@@ -1,13 +1,11 @@
 package co.com.crediya.r2dbc;
 
-import co.com.crediya.model.usuario.Usuario;
-import co.com.crediya.model.usuario.gateways.UsuarioRepository;
-import co.com.crediya.r2dbc.entities.UsuarioData;
-import co.com.crediya.r2dbc.helper.ReactiveAdapterOperations;
-import co.com.crediya.r2dbc.mapper.UsuarioEntityMapper;
+import co.com.crediya.model.user.User;
+import co.com.crediya.model.user.gateways.UserRepository;
+import co.com.crediya.r2dbc.entities.UserData;
+import co.com.crediya.r2dbc.mapper.UserEntityMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
@@ -15,32 +13,32 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class UsuarioReactiveRepositoryAdapter implements UsuarioRepository {
+public class UserReactiveRepositoryAdapter implements UserRepository {
 
-    private final UsuarioReactiveRepository repository;
+    private final UserReactiveRepository repository;
     private final TransactionalOperator transactionalOperator;
 
     @Override
-    public Mono<Usuario> guardarUsuario(Usuario usuario) {
-        final UsuarioData usuarioData = UsuarioEntityMapper.toData(usuario);
+    public Mono<User> createUser(User user) {
+        final UserData userData = UserEntityMapper.toData(user);
         return transactionalOperator.transactional(
-                repository.save(usuarioData)
+                repository.save(userData)
                         .doOnSubscribe(s -> log.trace(
                                 "RegistrandoUsuario - Guardando usuario en la base de datos: {}",
-                                usuarioData.getCorreoElectronico()))
+                                userData.getEmail()))
                         .doOnNext(saved -> log.debug(
                                 "RegistrandoUsuario - Usuario guardado con ID: {}",
                                 saved.getId()))
                         .doOnError(e -> log.error(
                                 "RegistrandoUsuario - Error al guardar el usuario {}: {}",
-                                usuarioData.getCorreoElectronico(), e.getMessage()))
+                                userData.getEmail(), e.getMessage()))
                         .flatMap(this::mapToUsuarioSimple)
         );
     }
 
     @Override
-    public Mono<Usuario> buscarPorCorreoElectronico(String correoElectronico) {
-        return repository.findByCorreoElectronico(correoElectronico)
+    public Mono<User> getByEmail(String correoElectronico) {
+        return repository.findByEmail(correoElectronico)
                 .doOnSubscribe(s -> log.trace(
                         "BuscarPorCorreoElectronico - Buscando usuario: {}", correoElectronico))
                 .doOnNext(u -> log.debug(
@@ -51,10 +49,10 @@ public class UsuarioReactiveRepositoryAdapter implements UsuarioRepository {
                 .flatMap(this::mapToUsuarioSimple);
     }
 
-    private Mono<Usuario> mapToUsuarioSimple(UsuarioData data) {
+    private Mono<User> mapToUsuarioSimple(UserData data) {
         if (data == null) return Mono.empty();
-        Usuario usuario = UsuarioEntityMapper.toEntity(data);
-        return Mono.just(usuario);
+        User user = UserEntityMapper.toEntity(data);
+        return Mono.just(user);
     }
 
 }
