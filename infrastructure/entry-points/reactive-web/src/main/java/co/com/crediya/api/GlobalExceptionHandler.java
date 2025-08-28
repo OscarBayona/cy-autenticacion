@@ -1,4 +1,4 @@
-package co.com.crediya.api.config;
+package co.com.crediya.api;
 
 import co.com.crediya.model.exceptions.BusinessException;
 import co.com.crediya.model.exceptions.TechnicalException;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE) // asegúrate de que corra antes que otros handlers
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class GlobalExceptionHandler implements WebExceptionHandler {
 
     private final HandlerStrategies strategies = HandlerStrategies.withDefaults();

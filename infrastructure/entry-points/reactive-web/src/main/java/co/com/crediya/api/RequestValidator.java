@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class RequestValidador {
+public class RequestValidator {
 
     private final Validator validator;
 
