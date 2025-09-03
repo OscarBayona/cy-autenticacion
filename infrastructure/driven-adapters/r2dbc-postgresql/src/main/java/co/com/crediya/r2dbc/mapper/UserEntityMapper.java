@@ -18,6 +18,7 @@ public class UserEntityMapper {
                 .phone(data.getPhone())
                 .email(data.getEmail())
                 .salaryBase(data.getSalaryBase())
+                .identityDocument(data.getIdentityDocument())
                 .build();
     }
 
@@ -32,6 +33,7 @@ public class UserEntityMapper {
                 .phone(entity.getPhone())
                 .email(entity.getEmail())
                 .salaryBase(entity.getSalaryBase())
+                .identityDocument(entity.getIdentityDocument())
                 .build();
     }
 }

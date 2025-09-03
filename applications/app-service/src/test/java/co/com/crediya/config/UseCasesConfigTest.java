@@ -42,6 +42,8 @@ public class UseCasesConfigTest {
                 public Mono<User> createUser(User user) { return Mono.just(user); }
                 @Override
                 public Mono<User> getByEmail(String correoElectronico) { return Mono.just(new User()); }
+                @Override
+                public Mono<User> findByIdentityDocument(String identityDocument) { return Mono.just(new User()); }
             };
         }
 

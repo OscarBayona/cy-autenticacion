@@ -41,4 +41,7 @@ public class UserData {
 
     @Column("salario_base")
     private BigDecimal salaryBase;
+
+    @Column("documento_identidad")
+    private String identityDocument;
 }

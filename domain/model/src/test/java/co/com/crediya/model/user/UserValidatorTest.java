@@ -4,6 +4,7 @@ import co.com.crediya.model.constants.SalaryLimits;
 import co.com.crediya.model.exceptions.user.InvalidUserException;
 import co.com.crediya.model.user.validators.UserValidator;
 import org.junit.jupiter.api.Test;
+import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 
@@ -23,20 +24,29 @@ public class UserValidatorTest {
     void mustFailSalaryNull() {
         User user = new User();
         user.setSalaryBase(null);
-        assertThrows(InvalidUserException.class, () -> UserValidator.validateUser(user));
+
+        StepVerifier.create(UserValidator.validateUser(user))
+                .expectError(InvalidUserException.class)
+                .verify();
     }
 
     @Test
     void mustFailSalaryBelowMin() {
         User user = new User();
         user.setSalaryBase(SalaryLimits.MIN.subtract(BigDecimal.ONE));
-        assertThrows(InvalidUserException.class, () -> UserValidator.validateUser(user));
+
+        StepVerifier.create(UserValidator.validateUser(user))
+                .expectError(InvalidUserException.class)
+                .verify();
     }
 
     @Test
     void mustFailSalaryAboveMax() {
         User user = new User();
         user.setSalaryBase(SalaryLimits.MAX.add(BigDecimal.ONE));
-        assertThrows(InvalidUserException.class, () -> UserValidator.validateUser(user));
+
+        StepVerifier.create(UserValidator.validateUser(user))
+                .expectError(InvalidUserException.class)
+                .verify();
     }
 }

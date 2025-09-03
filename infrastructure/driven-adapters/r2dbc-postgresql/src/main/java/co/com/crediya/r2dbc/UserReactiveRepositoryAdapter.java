@@ -49,6 +49,12 @@ public class UserReactiveRepositoryAdapter implements UserRepository {
                 .flatMap(this::mapToUsuarioSimple);
     }
 
+    @Override
+    public Mono<User> findByIdentityDocument(String identityDocument) {
+        return repository.findByIdentityDocument(identityDocument)
+                .flatMap(this::mapToUsuarioSimple);
+    }
+
     private Mono<User> mapToUsuarioSimple(UserData data) {
         if (data == null) return Mono.empty();
         User user = UserEntityMapper.toEntity(data);

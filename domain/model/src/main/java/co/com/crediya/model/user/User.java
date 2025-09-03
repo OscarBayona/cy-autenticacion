@@ -23,5 +23,5 @@ public class User {
     private String phone;
     private String email;
     private BigDecimal salaryBase;
-
+    private String identityDocument;
 }

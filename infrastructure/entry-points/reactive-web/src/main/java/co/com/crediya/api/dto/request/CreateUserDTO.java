@@ -24,5 +24,8 @@ public record CreateUserDTO(
         String email,
 
         @NotNull(message = "El salario base no puede ser nulo")
-        BigDecimal salaryBase
+        BigDecimal salaryBase,
+
+        @NotBlank(message = "El documento de identidad es obligatorio y no puede estar vacío")
+        String identityDocument
 ) {}

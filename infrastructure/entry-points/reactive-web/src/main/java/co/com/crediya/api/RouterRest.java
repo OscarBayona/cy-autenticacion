@@ -15,10 +15,11 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRest {
     @Bean
     @RouterOperations({
-            @RouterOperation(path = "/api/v1/usuarios", beanClass = Handler.class, beanMethod = "listenCreateUser")
+            @RouterOperation(path = "/api/v1/usuarios", beanClass = Handler.class, beanMethod = "listenCreateUser"),
+            @RouterOperation(path = "/api/v1/usuario/{document}", beanClass = Handler.class, beanMethod = "verifyUser")
     })
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST("/api/v1/usuarios"), handler::listenCreateUser);
-                //.and(route(GET("/api/otherusercase/path"), handler::listenGETOtherUseCase));
+        return route(POST("/api/v1/usuarios"), handler::listenCreateUser)
+                .and(route(GET("/api/v1/usuario/{document}"), handler::verifyUser));
     }
 }
